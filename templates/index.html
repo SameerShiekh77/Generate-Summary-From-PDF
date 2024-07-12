@@ -1,0 +1,34 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+  PDF Summarization Tool
+{% endblock title %}
+
+{% block content %}
+<div class="container pt-50">
+  <h2 class="text-center">Upload PDF file to generate summary</h2>
+  {% if unfinished_jobs_count > 50 %}
+  <p>{{unfinished_jobs_count}} files are already pending in MCQs, maximum 50 active jobs are allowed</p>
+  {% else %}
+  <form method="post" action="{% url 'pdf-summarize' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+   
+
+    <div class="mb-5">
+      <label for="content" class="form-label">PDF File</label>
+      <input type="file" class="form-control" id="content" name="file" required />
+    </div>  
+    
+    <textarea disabled class="form-control" style="min-height: 250px;" id="content">{{summary}}</textarea>
+    
+<br></br>
+    <button class="btn btn-primary mx-auto my-3" type="submit">Submit</button>
+  </form>
+
+  {% endif %}
+
+  
+</div>
+
+{% endblock content %}

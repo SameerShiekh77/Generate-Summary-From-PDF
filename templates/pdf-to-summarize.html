@@ -1,0 +1,77 @@
+{% extends 'layouts/base.html' %} {% block title %} File Upload | Al Nafi
+Software Utilities {% endblock title %} {% block content %}
+<div class="container pt-50">
+  <h2 class="text-center">Upload PDF file to generate MCQs</h2>
+  {% if unfinished_jobs_count > 50 %}
+  <p>{{unfinished_jobs_count}} files are already pending in MCQs, maximum 50 active jobs are allowed</p>
+  {% else %}
+  <form method="post" action="{% url 'mcq_pdf_submit' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-5">
+      <label for="name" class="form-label">Task Name</label>
+      <input type="text" class="form-control" id="name" name="name" required />
+    </div>
+
+    <div class="mb-5">
+      <label for="context" class="form-label">Context</label>
+      <input type="text" class="form-control" id="context" name="context" required />
+    </div>
+
+
+    <div class="mb-5">
+      <label for="content" class="form-label">PDF File</label>
+      <input type="file" class="form-control" id="content" name="file" required />
+      {% comment %} <textarea class="form-control" style="min-height: 250px;" id="content" name="content" required></textarea> {% endcomment %}
+    </div>  
+
+    <div class="mb-5">
+      <label for="quantity" class="form-label">Quantity</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="5" required />
+    </div>  
+
+
+    <button class="btn btn-primary m-auto" type="submit">Submit</button>
+  </form>
+
+  {% endif %}
+</div>
+{% if all_jobs %}
+
+<h2 class="text-center pt-50">MCQ Generator History</h2>
+<div class="container pt-20">
+  <div class="row" style="overflow: auto; max-height: 800px;">
+    {% for job in all_jobs %}
+    <a href="/mcq-generator/{{job.id}}" class="col-md-4 pt-20" style="text-decoration: none; color: inherit;">
+      <div class="card">
+        <div class="card-body">
+          <span class="card-text">ID: {{ job.id }}</span>
+          <h5 class="card-title">{{job.name}}</h5>
+          <span class="card-text">Type: {{ job.type }}</span>
+          <br/>
+          <span class="card-text">Status:
+            {% if job.completed %}
+            Completed
+            {% else %}
+            Pending
+            {% endif %}
+          </span>
+          <br />
+          <span>
+            User:
+            {{job.user}}
+          </span>
+          <br />
+          <span class="card-text">Date:
+            {{job.created_at}}
+          </span>
+        </div>
+      </div>
+    </a>
+
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock content %}
