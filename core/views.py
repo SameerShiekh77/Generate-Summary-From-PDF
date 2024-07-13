@@ -32,6 +32,8 @@ def extract_text_from_pdf(file):
 
             # Convert to PIL Image and apply OCR
             image = Image.open(io.BytesIO(image_bytes))
+            # pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+
             text += pytesseract.image_to_string(image)
 
     return text
@@ -49,7 +51,7 @@ def pdf_summarize(request):
     if request.method == 'POST':
         file = request.FILES.get("file")
         extracted_text = extract_text_from_pdf(file)
-        openai.api_key = "your-api-key"
+        openai.api_key = "api-key"
         messages = [
             {"role": "system", "content": generate_mcq_prompt_pdf(extracted_text)},
         ]
